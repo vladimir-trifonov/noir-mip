@@ -1,6 +1,8 @@
 [package]
-authors = [""]
-compiler_version = "0.7.1"
+name = "mip"
+type = "bin"
+authors = ["Vladimir Trifonov"]
+compiler_version = "0.11.0"
 
 [dependencies]
 trie = { tag = "main", git = "https://github.com/aragonzkresearch/noir-trie-proofs" }
