@@ -96,6 +96,11 @@ fn rlp_encode_block(block: &Block<H256>) -> Vec<u8> {
 #[tokio::main]
 async fn main() -> web3::Result<()> {
     dotenv().ok();
+    let args: Vec<String> = env::args().collect();
+    if args.len() == 1 {
+        panic!("No arguments passed.");
+    }
+
     let provider_url = env::var("MAINNET_RPC").unwrap();
     let http = Http::new(&provider_url)?;
     let web3 = web3::Web3::new(http);
@@ -207,23 +212,33 @@ async fn main() -> web3::Result<()> {
         storage_key.to_big_endian(&mut storage_key_bytes);
         storage_value.to_big_endian(&mut storage_value_bytes);
 
-        // Output
-        println!("block_hash = {:?}", block.hash.unwrap().as_bytes());
-        println!("account_key = {:?}", target_account.as_bytes());
-        println!("account_value = {:?}", account_value_rlp_stream.as_raw());
-        println!("storage_key = {:?}", storage_key_bytes);
-        println!("storage_value = {:?}", storage_value_bytes);
-        println!("block_header_rlp = {:?}", rlp_encoded_block);
-        println!("block_header_rlp_head_len = {:?}", rlp_head_bytes.len());
-        println!("block_header_rlp_tail_len = {:?}", rlp_tail_bytes.len());
-        println!("storage_root = {:?}", &unwrapped.storage_hash.as_bytes());
-        println!("account_proof = {:?}", account_proof_flat_vec);
-        println!("storage_proof = {:?}", storage_proof_flat_vec);
-        println!("account_proof_depth = {:?}", &unwrapped.account_proof.len());
-        println!(
-            "storage_proof_depth = {:?}",
-            &unwrapped.storage_proof[0].proof.len()
-        );
+        if &args[1] == "gen_prove_params" {
+            // Output
+            println!("block_hash = {:?}", block.hash.unwrap().as_bytes());
+            println!("account_key = {:?}", target_account.as_bytes());
+            println!("account_value = {:?}", account_value_rlp_stream.as_raw());
+            println!("storage_key = {:?}", storage_key_bytes);
+            println!("storage_value = {:?}", storage_value_bytes);
+            println!("block_header_rlp = {:?}", rlp_encoded_block);
+            println!("block_header_rlp_head_len = {:?}", rlp_head_bytes.len());
+            println!("block_header_rlp_tail_len = {:?}", rlp_tail_bytes.len());
+            println!("storage_root = {:?}", &unwrapped.storage_hash.as_bytes());
+            println!("account_proof = {:?}", account_proof_flat_vec);
+            println!("storage_proof = {:?}", storage_proof_flat_vec);
+            println!("account_proof_depth = {:?}", &unwrapped.account_proof.len());
+            println!(
+                "storage_proof_depth = {:?}",
+                &unwrapped.storage_proof[0].proof.len()
+            );
+        } else if &args[1] == "gen_verify_params" {
+            println!("account_key = {:?}", target_account.as_bytes());
+            println!("account_value = {:?}", account_value_rlp_stream.as_raw());
+            println!("block_hash = {:?}", block.hash.unwrap().as_bytes());
+            println!("storage_key = {:?}", storage_key_bytes);
+            println!("storage_value = {:?}", storage_value_bytes);
+        } else {
+            panic!("Invalid command!");
+        }
     } else {
         eprintln!("Block not found!");
     }

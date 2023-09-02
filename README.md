@@ -41,7 +41,13 @@ cargo build
 ### Generate prover configuration
 
 ```bash
-cargo run > Prover.toml
+cargo run gen_prove_params > Prover.toml
+```
+
+### Generate verifier configuration
+
+```bash
+cargo run gen_verify_params > Verifier.toml
 ```
 
 ### Generate proof
